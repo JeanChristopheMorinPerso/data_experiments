@@ -108,6 +108,7 @@ CREATE TABLE packages (
     archive_type VARCHAR,
     build VARCHAR,
     build_number UBIGINT,
+    channel VARCHAR,
     constraints VARCHAR[],
     depends VARCHAR[],
     filename VARCHAR,
@@ -127,7 +128,6 @@ CREATE TABLE packages (
     track_features VARCHAR,
     type VARCHAR,
     version VARCHAR,
-    channel VARCHAR
 );
 
 -- Insert all packages into the "packages" table.
