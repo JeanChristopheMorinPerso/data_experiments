@@ -8,8 +8,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/linux-64/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -20,8 +20,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/linux-aarch64/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -32,8 +32,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/linux-s390x/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -44,8 +44,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/linux-ppc64le/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -56,8 +56,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/osx-64/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -68,8 +68,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/osx-arm64/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -80,8 +80,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/win-64/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -92,8 +92,8 @@ FROM read_json(
     'https://repo.anaconda.com/pkgs/main/noarch/repodata.json',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
-        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
-        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" VARCHAR, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
+        "packages.conda": 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
         removed: "VARCHAR[]",
         repodata_version: "UBIGINT"
     },
@@ -123,7 +123,7 @@ CREATE TABLE packages (
     size UBIGINT,
     subdir VARCHAR,
     summary VARCHAR,
-    timestamp VARCHAR,
+    timestamp UBIGINT,
     track_features VARCHAR,
     type VARCHAR,
     version VARCHAR,
@@ -172,6 +172,10 @@ INSERT INTO packages BY NAME (
     SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_noarch)
 );
 
+-- Convert the timestamp column to a real TIMESTAMP type.
+ALTER TABLE packages ALTER timestamp SET DATA TYPE TIMESTAMPTZ USING to_timestamp(timestamp/1000);
+
+-- Drop the temporary tables to regain some memory.
 DROP TABLE tmp_linux_64;
 DROP TABLE tmp_linux_aarch64;
 DROP TABLE tmp_linux_s390x;
