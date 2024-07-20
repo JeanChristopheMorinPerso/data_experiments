@@ -100,12 +100,14 @@ FROM read_json(
     maximum_object_size = 300000000
 );
 
+CREATE TYPE archive_type AS ENUM ('conda', 'tar.bz2');
+
 -- Create the "packages" table
 CREATE TABLE packages (
     app_cli_opts JSON,
     app_entry VARCHAR,
     app_type VARCHAR,
-    archive_type VARCHAR,
+    archive_type archive_type,
     build VARCHAR,
     build_number UBIGINT,
     channel VARCHAR,
