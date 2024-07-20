@@ -130,6 +130,7 @@ CREATE TABLE packages (
     track_features VARCHAR,
     type VARCHAR,
     version VARCHAR,
+    PRIMARY KEY (filename, channel, subdir),
 );
 
 -- Insert all packages into the "packages" table.
