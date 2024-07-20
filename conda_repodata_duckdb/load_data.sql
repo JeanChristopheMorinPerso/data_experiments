@@ -130,49 +130,50 @@ CREATE TABLE packages (
     track_features VARCHAR,
     type VARCHAR,
     version VARCHAR,
+    url VARCHAR AS (concat_ws('/', channel, subdir, filename)),
     PRIMARY KEY (filename, channel, subdir),
 );
 
 -- Insert all packages into the "packages" table.
 INSERT INTO packages BY NAME (
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_64)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_64)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_64)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_64)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_aarch64)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_aarch64)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_aarch64)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_aarch64)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_s390x)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_s390x)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_s390x)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_s390x)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_ppc64le)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_linux_ppc64le)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_ppc64le)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_linux_ppc64le)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_osx_64)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_osx_64)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_osx_64)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_osx_64)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_osx_arm64)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_osx_arm64)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_osx_arm64)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_osx_arm64)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_win_64)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_win_64)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_win_64)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_win_64)
 
     UNION ALL
-    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_noarch)
+    SELECT unnest(item.value), 'tar.bz2' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries(packages)) AS item FROM tmp_noarch)
     UNION ALL
-    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_noarch)
+    SELECT unnest(item.value), 'conda' AS archive_type, item.key AS filename, 'https://repo.anaconda.com/pkgs/main' AS channel FROM (SELECT unnest(map_entries("packages.conda")) AS item FROM tmp_noarch)
 );
 
 -- Convert the timestamp column to a real TIMESTAMP type.
