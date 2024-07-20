@@ -5,7 +5,7 @@
 -- Import the data into the raw_repodata (and create the table)
 CREATE TABLE tmp_linux_64 AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/linux-64/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/linux-64/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -17,7 +17,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_linux_aarch64 AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/linux-aarch64/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/linux-aarch64/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -29,7 +29,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_linux_s390x AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/linux-s390x/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/linux-s390x/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -41,7 +41,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_linux_ppc64le AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/linux-ppc64le/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/linux-ppc64le/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -53,7 +53,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_osx_64 AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/osx-64/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/osx-64/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -65,7 +65,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_osx_arm64 AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/osx-arm64/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/osx-arm64/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -77,7 +77,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_win_64 AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/win-64/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/win-64/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
@@ -89,7 +89,7 @@ FROM read_json(
 );
 CREATE TABLE tmp_noarch AS SELECT *
 FROM read_json(
-    'https://repo.anaconda.com/pkgs/main/noarch/repodata.json',
+    'https://repo.anaconda.com/pkgs/main/noarch/repodata.json.zst',
     columns = {
         info: 'STRUCT(subdir VARCHAR)',
         packages: 'MAP(VARCHAR, STRUCT(build VARCHAR, build_number UBIGINT, "depends" VARCHAR[], license VARCHAR, license_family VARCHAR, md5 VARCHAR, "name" VARCHAR, sha256 VARCHAR, size UBIGINT, subdir VARCHAR, "timestamp" UBIGINT, "version" VARCHAR, track_features VARCHAR, "constraints" VARCHAR[], namespace VARCHAR, revoked BOOLEAN, app_entry VARCHAR, app_type VARCHAR, summary VARCHAR, "type" VARCHAR, icon VARCHAR, app_cli_opts JSON, namespace_in_name BOOLEAN))',
