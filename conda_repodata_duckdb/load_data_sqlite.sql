@@ -29,7 +29,7 @@ CREATE TABLE packages (
     track_features VARCHAR,
     type VARCHAR,
     version VARCHAR,
-    -- url VARCHAR AS (concat_ws('/', channel, subdir, filename)),
+    url VARCHAR AS (format('%s/%s/%s', channel, subdir, filename)),
     PRIMARY KEY (filename, channel, subdir)
 );
 
