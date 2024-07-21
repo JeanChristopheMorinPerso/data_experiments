@@ -1,5 +1,5 @@
 -- https://github.com/asg017/sqlite-http
-.load ./dist/http0
+.load ./sqlite-http/dist/http0
 
 -- Create the "packages" table
 CREATE TABLE packages (

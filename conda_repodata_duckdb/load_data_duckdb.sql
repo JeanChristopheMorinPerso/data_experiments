@@ -2,6 +2,12 @@
 
 -- To read the file, use ".read asd.sql" in duckdb
 
+INSTALL icu;
+LOAD icu;
+
+-- If we don't do that, DuckDB will display dates in the local timezone.
+SET TimeZone = 'UTC';
+
 -- Import the data into the raw_repodata (and create the table)
 CREATE TABLE tmp_linux_64 AS SELECT *
 FROM read_json(
@@ -188,3 +194,6 @@ DROP TABLE tmp_osx_64;
 DROP TABLE tmp_osx_arm64;
 DROP TABLE tmp_win_64;
 DROP TABLE tmp_noarch;
+
+CREATE TABLE downloads AS SELECT * FROM read_parquet('s3://anaconda-package-data/conda/monthly/*/*.parquet') WHERE data_source = 'anaconda';
+ALTER TABLE downloads ALTER time SET DATA TYPE TIMESTAMPTZ USING strptime(format('{}Z', time), '%Y-%m%Z');
