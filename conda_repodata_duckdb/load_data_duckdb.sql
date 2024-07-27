@@ -108,8 +108,11 @@ FROM read_json(
 
 CREATE TYPE archive_type AS ENUM ('conda', 'tar.bz2');
 
+CREATE SEQUENCE id_sequence START 1;
+
 -- Create the "packages" table
 CREATE TABLE packages (
+    id INTEGER DEFAULT nextval('id_sequence'),
     app_cli_opts JSON,
     app_entry VARCHAR,
     app_type VARCHAR,
@@ -195,5 +198,29 @@ DROP TABLE tmp_osx_arm64;
 DROP TABLE tmp_win_64;
 DROP TABLE tmp_noarch;
 
-CREATE TABLE downloads AS SELECT * FROM read_parquet('s3://anaconda-package-data/conda/monthly/*/*.parquet') WHERE data_source = 'anaconda';
-ALTER TABLE downloads ALTER time SET DATA TYPE TIMESTAMPTZ USING strptime(format('{}Z', time), '%Y-%m%Z');
+-- CREATE TABLE downloads AS SELECT * FROM read_parquet('s3://anaconda-package-data/conda/monthly/*/*.parquet') WHERE data_source = 'anaconda';
+-- ALTER TABLE downloads ALTER time SET DATA TYPE TIMESTAMPTZ USING strptime(format('{}Z', time), '%Y-%m%Z');
+
+CREATE TYPE path_type AS ENUM ('softlink', 'hardlink');
+CREATE TYPE file_mode AS ENUM ('text', 'binary');
+
+CREATE TABLE paths (
+    package_id INTEGER,
+    path VARCHAR,
+    file_mode file_mode,
+    prefix_placeholder VARCHAR,
+    type path_type,
+    sha256 varchar,
+    size UBIGINT,
+);
+
+
+CREATE TABLE tmp_paths_linux_64 AS (SELECT * FROM read_csv('paths.csv'));
+
+INSERT INTO paths BY NAME (
+    SELECT COLUMNS(c -> c != url) FROM (
+        SELECT packages.id AS package_id, tmp_paths_linux_64.* FROM tmp_paths_linux_64 JOIN packages ON (tmp_paths_linux_64.url = packages.url)
+    )
+);
+
+DROP TABLE tmp_paths_linux_64;
