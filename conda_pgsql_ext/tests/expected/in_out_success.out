@@ -1,0 +1,26 @@
+CREATE EXTENSION condaversion;
+ERROR:  extension "condaversion" already exists
+SELECT '1.0.0'::condaversion;
+ condaversion 
+--------------
+ 1.0.0
+(1 row)
+
+SELECT ' 1.0.0 '::condaversion;
+ condaversion 
+--------------
+  1.0.0 
+(1 row)
+
+SELECT '1.0.0'::condaversion;
+ condaversion 
+--------------
+ 1.0.0
+(1 row)
+
+SELECT ' 1.0.0 '::condaversion;
+ condaversion 
+--------------
+  1.0.0 
+(1 row)
+

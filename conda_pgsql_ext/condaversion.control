@@ -1,0 +1,3 @@
+comment = 'Conda version number data type'
+default_version = '1.0'
+relocatable = true

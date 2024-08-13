@@ -1,0 +1,8 @@
+conda_pgsql_ext/results
+conda_pgsql_ext/deps
+*.o
+*.so
+logfile
+*.diffs
+regression.out
+

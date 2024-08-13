@@ -1,0 +1,6 @@
+CREATE EXTENSION condaversion;
+ERROR:  extension "condaversion" already exists
+SELECT ' '::condaversion;
+ERROR:  invalid input syntax for type condaversion: " ". Error from libmamba: Error parsing version "". Empty version.
+LINE 1: SELECT ' '::condaversion;
+               ^
