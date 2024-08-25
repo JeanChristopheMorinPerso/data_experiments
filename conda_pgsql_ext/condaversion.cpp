@@ -274,17 +274,6 @@ extern "C"
     mamba::specs::Version jsonb_to_cpp_version(Jsonb* jsonb) {
         // elog(NOTICE, "jsonb_to_cpp_version");
 
-        // JsonbValue epoch_key_, version_key_, local_key_;
-        // epoch_key_.type = jbvString;
-        // epoch_key_.val.string.val = (char*)CONDA_JSON_KEY_EPOCH;
-        // epoch_key_.val.string.len = std::strlen(CONDA_JSON_KEY_EPOCH);
-        // version_key_.type = jbvString;
-        // version_key_.val.string.val = (char*)CONDA_JSON_KEY_VERSION;
-        // version_key_.val.string.len = std::strlen(CONDA_JSON_KEY_VERSION);
-        // local_key_.type = jbvString;
-        // local_key_.val.string.val = (char*)CONDA_JSON_KEY_LOCAL;
-        // local_key_.val.string.len = std::strlen(CONDA_JSON_KEY_LOCAL);
-
         if (!JB_ROOT_IS_OBJECT(jsonb)) {
             ereport(ERROR,
                     (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
