@@ -333,18 +333,20 @@ extern "C"
         // elog(NOTICE, "Inside condaversion_out");
         Jsonb *jsonb_version = PG_GETARG_JSONB_P(0);
 
-        mamba::specs::Version version = jsonb_to_cpp_version(jsonb_version);
-        auto version_str = version.str().c_str();
+        JsonbValue attr_value;
 
-        // Returning version.str().c_str() will cause problems. For example,
-        // a first query like "SELECT '1.2'::condaversion;" will result in
-        // '\x08'...
-        // So it looks like we really need to palloc the string.
-        // https://stackoverflow.com/a/42168751
-        char *cstr = (char *)palloc( (std::strlen(version_str) + 1) * sizeof (char));
-        strcpy(cstr, version_str);
+        // Get the original string from the Jsonb.
+        // mamba::specs::Version::parse is destructive. The output
+        // string (from the str method) will potentially differ from
+        // the original string.
+        getKeyJsonValueFromContainer(
+            &jsonb_version->root,
+            CONDA_JSON_KEY_ORIGINAL,
+            strlen(CONDA_JSON_KEY_ORIGINAL),
+            &attr_value
+        );
 
-        PG_RETURN_CSTRING(cstr);
+        PG_RETURN_CSTRING(attr_value.val.string.val);
     }
 
     PG_FUNCTION_INFO_V1(condaversion_hash);
