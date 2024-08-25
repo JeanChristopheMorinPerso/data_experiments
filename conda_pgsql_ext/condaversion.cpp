@@ -40,13 +40,13 @@ static const char* CONDA_JSON_KEY_ORIGINAL = "o";
 
 namespace
 {
-    int32
+    int8
     condaversioncmp (mamba::specs::Version* left, mamba::specs::Version* right)
     {
-        int32 result;
-        if (left > right) {
+        int8 result;
+        if (*left > *right) {
             result = 1;
-        } else if (left < right) {
+        } else if (*left < *right) {
             result = -1;
         } else {
             result = 0;
