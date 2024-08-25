@@ -2,7 +2,7 @@
 set -e
 
 apt update
-apt install libreadline-dev python3 curl libcurl4-openssl-dev pkg-config libssl-dev cmake g++ libspdlog-dev libfmt-dev libexpected-dev nlohmann-json3-dev libsimdjson-dev libyaml-cpp-dev libsolv-dev libsolvext-dev libcurl4-openssl-dev libarchive-dev
+apt install --yes libreadline-dev python3 curl libcurl4-openssl-dev pkg-config libssl-dev cmake g++ libspdlog-dev libfmt-dev libexpected-dev nlohmann-json3-dev libsimdjson-dev libyaml-cpp-dev libsolv-dev libsolvext-dev libcurl4-openssl-dev libarchive-dev
 
 mkdir -p deps
 curl -L https://github.com/mamba-org/mamba/archive/refs/tags/2024.07.26.tar.gz -o deps/mamba-2024.07.26.tar.gz
