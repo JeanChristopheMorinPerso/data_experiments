@@ -5,6 +5,8 @@ extern "C"
 #include <access/hash.h>
 #include <utils/builtins.h>
 #include <varatt.h>
+#include <utils/jsonb.h>
+#include <utils/numeric.h>
 
 #ifdef PG_MODULE_MAGIC
   PG_MODULE_MAGIC;
@@ -29,29 +31,22 @@ extern Datum condaversion_le (PG_FUNCTION_ARGS);
 #include <mamba/specs/version.hpp>
 #include <mamba/util/string.hpp>
 
+static const char* CONDA_JSON_KEY_EPOCH = "e";
+static const char* CONDA_JSON_KEY_VERSION = "v";
+static const char* CONDA_JSON_KEY_LOCAL = "l";
+static const char* CONDA_JSON_KEY_LITERAL = "l";
+static const char* CONDA_JSON_KEY_NUMERAL = "n";
+static const char* CONDA_JSON_KEY_ORIGINAL = "o";
+
 namespace
 {
-
-    typedef struct CondaVersion {
-        int32 length;  // Header
-        char data[FLEXIBLE_ARRAY_MEMBER];
-    } CondaVersion;
-
     int32
-    condaversioncmp (char *left, char *right)
+    condaversioncmp (mamba::specs::Version* left, mamba::specs::Version* right)
     {
         int32 result;
-        // char *lstr, *rstr;
-
-        // lstr = text_to_cstring(left);
-        // rstr = text_to_cstring(right);
-
-        mamba::specs::Version left_version = mamba::specs::Version::parse(left).value();
-        mamba::specs::Version right_version = mamba::specs::Version::parse(right).value();
-
-        if (left_version > right_version) {
+        if (left > right) {
             result = 1;
-        } else if (left_version < right_version) {
+        } else if (left < right) {
             result = -1;
         } else {
             result = 0;
@@ -66,6 +61,243 @@ namespace
 
 extern "C"
 {
+    Jsonb* cpp_version_to_jsonb(mamba::specs::Version *version, char* raw_version) {
+        // Create a new JSON object
+        JsonbParseState *parseState = NULL;
+        JsonbValue *result = pushJsonbValue(&parseState, WJB_BEGIN_OBJECT, NULL);
+
+        // Add epoch
+        JsonbValue epochKey, epochVal;
+        epochKey.type = jbvString;
+        epochKey.val.string.val = (char*)CONDA_JSON_KEY_EPOCH;
+        epochKey.val.string.len = std::strlen(CONDA_JSON_KEY_EPOCH);
+        epochVal.type = jbvNumeric;
+        epochVal.val.numeric = DatumGetNumeric(DirectFunctionCall1(int4_numeric, Int32GetDatum(version->epoch())));
+        result = pushJsonbValue(&parseState, WJB_KEY, &epochKey);
+        result = pushJsonbValue(&parseState, WJB_VALUE, &epochVal);
+
+        // Add version array
+        JsonbValue versionKey;
+        versionKey.type = jbvString;
+        versionKey.val.string.val = (char*)CONDA_JSON_KEY_VERSION;
+        versionKey.val.string.len = std::strlen(CONDA_JSON_KEY_VERSION);
+        result = pushJsonbValue(&parseState, WJB_KEY, &versionKey);
+        // elog(NOTICE, "Opening version array");
+        result = pushJsonbValue(&parseState, WJB_BEGIN_ARRAY, NULL);
+
+        for (const auto& part : version->version())
+        {
+            // elog(NOTICE, "  Opening part array");
+            result = pushJsonbValue(&parseState, WJB_BEGIN_ARRAY, NULL);
+            for (const auto& atom : part) {
+
+                result = pushJsonbValue(&parseState, WJB_BEGIN_OBJECT, NULL);
+
+                JsonbValue atomLiteralKey, atomLiteralVal;
+                atomLiteralKey.type = jbvString;
+                atomLiteralKey.val.string.val = (char*)CONDA_JSON_KEY_LITERAL;
+                atomLiteralKey.val.string.len = std::strlen(CONDA_JSON_KEY_LITERAL);
+                atomLiteralVal.type = jbvString;
+                atomLiteralVal.val.string.val = (char*)atom.literal().c_str();
+                atomLiteralVal.val.string.len = atom.literal().length();
+                result = pushJsonbValue(&parseState, WJB_KEY, &atomLiteralKey);
+                result = pushJsonbValue(&parseState, WJB_VALUE, &atomLiteralVal);
+
+                JsonbValue atomNumeralKey, atomNumeralVal;
+                atomNumeralKey.type = jbvString;
+                atomNumeralKey.val.string.val = (char*)CONDA_JSON_KEY_NUMERAL;
+                atomNumeralKey.val.string.len = std::strlen(CONDA_JSON_KEY_NUMERAL);
+                atomNumeralVal.type = jbvNumeric;
+                atomNumeralVal.val.numeric = DatumGetNumeric(DirectFunctionCall1(int8_numeric, Int64GetDatum(atom.numeral())));
+                result = pushJsonbValue(&parseState, WJB_KEY, &atomNumeralKey);
+                result = pushJsonbValue(&parseState, WJB_VALUE, &atomNumeralVal);
+
+                result = pushJsonbValue(&parseState, WJB_END_OBJECT, NULL);
+            }
+
+            result = pushJsonbValue(&parseState, WJB_END_ARRAY, NULL);
+            // elog(NOTICE, "  Closing part array");
+        }
+
+        // elog(NOTICE, "Closing version array");
+        result = pushJsonbValue(&parseState, WJB_END_ARRAY, NULL);
+
+        // Add local array
+        JsonbValue localKey;
+        localKey.type = jbvString;
+        localKey.val.string.val = (char*)CONDA_JSON_KEY_LOCAL;
+        localKey.val.string.len = std::strlen(CONDA_JSON_KEY_LOCAL);
+        result = pushJsonbValue(&parseState, WJB_KEY, &localKey);
+        // elog(NOTICE, "Opening local array");
+        result = pushJsonbValue(&parseState, WJB_BEGIN_ARRAY, NULL);
+
+        for (const auto& part : version->local())
+        {
+            // elog(NOTICE, "  Opening part array");
+            result = pushJsonbValue(&parseState, WJB_BEGIN_ARRAY, NULL);
+            for (const auto& atom : part) {
+
+                result = pushJsonbValue(&parseState, WJB_BEGIN_OBJECT, NULL);
+
+                JsonbValue atomLiteralKey, atomLiteralVal;
+                atomLiteralKey.type = jbvString;
+                atomLiteralKey.val.string.val = (char*)CONDA_JSON_KEY_LITERAL;
+                atomLiteralKey.val.string.len = std::strlen(CONDA_JSON_KEY_LITERAL);
+                atomLiteralVal.type = jbvString;
+                atomLiteralVal.val.string.val = (char*)atom.literal().c_str();
+                atomLiteralVal.val.string.len = atom.literal().length();
+                result = pushJsonbValue(&parseState, WJB_KEY, &atomLiteralKey);
+                result = pushJsonbValue(&parseState, WJB_VALUE, &atomLiteralVal);
+
+                JsonbValue atomNumeralKey, atomNumeralVal;
+                atomNumeralKey.type = jbvString;
+                atomNumeralKey.val.string.val = (char*)CONDA_JSON_KEY_NUMERAL;
+                atomNumeralKey.val.string.len = std::strlen(CONDA_JSON_KEY_NUMERAL);
+                atomNumeralVal.type = jbvNumeric;
+                atomNumeralVal.val.numeric = DatumGetNumeric(DirectFunctionCall1(int8_numeric, Int64GetDatum(atom.numeral())));
+                result = pushJsonbValue(&parseState, WJB_KEY, &atomNumeralKey);
+                result = pushJsonbValue(&parseState, WJB_VALUE, &atomNumeralVal);
+
+                result = pushJsonbValue(&parseState, WJB_END_OBJECT, NULL);
+            }
+
+            // elog(NOTICE, "  Closing part array");
+            result = pushJsonbValue(&parseState, WJB_END_ARRAY, NULL);
+        }
+
+        // elog(NOTICE, "Closing local array");
+        result = pushJsonbValue(&parseState, WJB_END_ARRAY, NULL);
+
+        // Add original version for display purposes
+        JsonbValue originalKey, originalVal;
+        originalKey.type = jbvString;
+        originalKey.val.string.val = (char*)CONDA_JSON_KEY_ORIGINAL;
+        originalKey.val.string.len = std::strlen(CONDA_JSON_KEY_ORIGINAL);
+        originalVal.type = jbvString;
+        originalVal.val.string.val = raw_version;
+        originalVal.val.string.len = strlen(raw_version);
+        result = pushJsonbValue(&parseState, WJB_KEY, &originalKey);
+        result = pushJsonbValue(&parseState, WJB_VALUE, &originalVal);
+
+        result = pushJsonbValue(&parseState, WJB_END_OBJECT, NULL);
+
+        return JsonbValueToJsonb(result);
+    }
+
+    const char * const CONDA_PSQL_TYPES_STR[] =
+    {
+        "WJB_DONE",
+        "WJB_KEY",
+        "WJB_VALUE",
+        "WJB_ELEM",
+        "WJB_BEGIN_ARRAY",
+        "WJB_END_ARRAY",
+        "WJB_BEGIN_OBJECT",
+        "WJB_END_OBJECT"
+    };
+
+    // Get a CommonVersion out of a Jsonb.
+    // This function is messy...
+    mamba::specs::CommonVersion process_conda_jsonb_attr(Jsonb* jsonb, const char* attr_name) {
+        JsonbValue attr_value;
+        getKeyJsonValueFromContainer(&jsonb->root, attr_name, strlen(attr_name), &attr_value);
+        Assert(attr_value.type == jbvBinary);
+
+        // This is binary, but we can get the actual container via attr_value.val.binary.data
+        Assert(JsonContainerIsArray(attr_value.val.binary.data));
+
+        JsonbIterator *it = JsonbIteratorInit(attr_value.val.binary.data);
+        JsonbIteratorToken type;
+        JsonbValue val;
+
+        mamba::specs::CommonVersion parts = mamba::specs::CommonVersion();
+
+        // elog(NOTICE, "Iterating over %d parts", JsonContainerSize(attr_value.val.binary.data));
+
+        int indentation = 0;
+        bool processingAtom = false;
+
+        mamba::specs::VersionPart part;
+
+        std::string literal;
+        int64_t numeral = 0;
+
+        while ((type = JsonbIteratorNext(&it, &val, false)) != WJB_DONE) {
+            if ((type == WJB_END_ARRAY) || (type == WJB_END_OBJECT)) {
+                indentation--;
+
+                if (type == WJB_END_ARRAY && indentation == 1) {
+                    // Store the part
+                    parts.emplace_back(part);
+
+                    // Reset
+                    part = mamba::specs::VersionPart();
+                    part.clear();
+                }
+            }
+
+            std::string indent_str(indentation * 2, ' ');
+
+            // elog(NOTICE, "%s%s", indent_str.c_str(), CONDA_PSQL_TYPES_STR[type]);
+
+            if ((type == WJB_BEGIN_ARRAY) || (type == WJB_BEGIN_OBJECT)) {
+                indentation++;
+            }
+
+            // if (type == WJB_BEGIN_ARRAY && indentation > 1) {
+            //     processingAtom = true;
+            // }
+
+            if (type == WJB_KEY) {
+                if (strncmp(val.val.string.val, (char*)CONDA_JSON_KEY_LITERAL, val.val.string.len) == 0)
+                {
+                    JsonbIteratorNext(&it, &val, true);
+                    literal = std::string(val.val.string.val, val.val.string.len);
+                    // elog(NOTICE, "%sUnpacked literal: '%s'", indent_str.c_str(), literal.c_str());
+                }
+                else if (strncmp(val.val.string.val, (char*)CONDA_JSON_KEY_NUMERAL, val.val.string.len) == 0)
+                {
+                    JsonbIteratorNext(&it, &val, true);
+                    numeral = DatumGetInt64(DirectFunctionCall1(numeric_int8, NumericGetDatum(val.val.numeric)));
+                    // elog(NOTICE, "%sUnpacked numeral: %ld", indent_str.c_str(), numeral);
+                }
+            }
+
+            if (type == WJB_END_OBJECT) {
+                // Store the atom
+                part.emplace_back(mamba::specs::VersionPartAtom(numeral, literal));
+            }
+        }
+        return parts;
+    }
+
+    mamba::specs::Version jsonb_to_cpp_version(Jsonb* jsonb) {
+        // elog(NOTICE, "jsonb_to_cpp_version");
+
+        // JsonbValue epoch_key_, version_key_, local_key_;
+        // epoch_key_.type = jbvString;
+        // epoch_key_.val.string.val = (char*)CONDA_JSON_KEY_EPOCH;
+        // epoch_key_.val.string.len = std::strlen(CONDA_JSON_KEY_EPOCH);
+        // version_key_.type = jbvString;
+        // version_key_.val.string.val = (char*)CONDA_JSON_KEY_VERSION;
+        // version_key_.val.string.len = std::strlen(CONDA_JSON_KEY_VERSION);
+        // local_key_.type = jbvString;
+        // local_key_.val.string.val = (char*)CONDA_JSON_KEY_LOCAL;
+        // local_key_.val.string.len = std::strlen(CONDA_JSON_KEY_LOCAL);
+
+        if (!JB_ROOT_IS_OBJECT(jsonb)) {
+            ereport(ERROR,
+                    (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+                    errmsg("cannot call %s on a non-jsonb object", __func__)));
+        }
+
+
+        auto version_parts = process_conda_jsonb_attr(jsonb, CONDA_JSON_KEY_VERSION);
+        auto local_parts = process_conda_jsonb_attr(jsonb, CONDA_JSON_KEY_LOCAL);
+        mamba::specs::Version version(0, std::move(version_parts), std::move(local_parts));
+        return version;
+    }
+
     PG_FUNCTION_INFO_V1(condaversion_in);
 
     Datum
@@ -83,24 +315,14 @@ extern "C"
                             "condaversion", str, tmp_version.error().what())));
         // pfree(str);
 
-        // Allocate on the heap. We get a pointer to it. This guarantees that
-        // it won't be freed after the return. (I think?)
-        // I have no idea how it'll be freed...
-        // Should we create a strut instead that we could palloc?
-        // mamba::specs::Version *version = new mamba::specs::Version(
-        //     tmp_version.value().epoch(),
-        //     std::move(tmp_version.value().version()),
-        //     std::move(tmp_version.value().local())
-        // );
+        auto version = &tmp_version.value();
 
-        // Add one for the null terminator.
-        std::size_t length = std::strlen(str) + 1;
+        // Convert the Version object into a Jsonb object. This allows
+        // to more easily serialize the Version object into a JSON string.
+        // And more importantly, Jsonb is very fast.
+        Jsonb* result = cpp_version_to_jsonb(version, str);
 
-        CondaVersion *destination = (CondaVersion *) palloc(VARHDRSZ + length);
-        SET_VARSIZE(destination, VARHDRSZ + length);
-        memcpy(destination->data, str, length);
-
-        PG_RETURN_POINTER(destination);
+        PG_RETURN_POINTER(result);
     }
 
     PG_FUNCTION_INFO_V1(condaversion_out);
@@ -109,22 +331,20 @@ extern "C"
     condaversion_out(PG_FUNCTION_ARGS)
     {
         // elog(NOTICE, "Inside condaversion_out");
-        // mamba::specs::Version *version = (mamba::specs::Version *) PG_GETARG_POINTER(0);
+        Jsonb *jsonb_version = PG_GETARG_JSONB_P(0);
 
-        CondaVersion *version = (CondaVersion *) PG_GETARG_POINTER(0);
+        mamba::specs::Version version = jsonb_to_cpp_version(jsonb_version);
+        auto version_str = version.str().c_str();
 
         // Returning version.str().c_str() will cause problems. For example,
         // a first query like "SELECT '1.2'::condaversion;" will result in
         // '\x08'...
         // So it looks like we really need to palloc the string.
         // https://stackoverflow.com/a/42168751
-        // char *cstr = (char *)palloc( (std::strlen(version)) * sizeof (char));
-        // strcpy(cstr, version);
+        char *cstr = (char *)palloc( (std::strlen(version_str) + 1) * sizeof (char));
+        strcpy(cstr, version_str);
 
-        char       *result;
-        result = psprintf("%s", version->data);
-
-        PG_RETURN_CSTRING(result);
+        PG_RETURN_CSTRING(cstr);
     }
 
     PG_FUNCTION_INFO_V1(condaversion_hash);
@@ -154,13 +374,13 @@ extern "C"
     Datum
     condaversion_cmp(PG_FUNCTION_ARGS)
     {
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        // mamba::specs::Version left = mamba::specs::Version::parse(left_intern->data).value();
-        // mamba::specs::Version right = mamba::specs::Version::parse(right_intern->data).value();
-        result = condaversioncmp(left->data, right->data);
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+        result = condaversioncmp(&left, &right);
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -173,17 +393,14 @@ extern "C"
     Datum
     condaversion_eq(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_eq");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
-
-        // auto left = mamba::specs::Version::parse(left_intern->data).value();
-        // auto right = mamba::specs::Version::parse(right_intern->data).value();
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) == 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) == 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -198,14 +415,14 @@ extern "C"
     Datum
     condaversion_ne(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_ne");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) != 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) != 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -218,14 +435,14 @@ extern "C"
     Datum
     condaversion_lt(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_lt");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) < 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) < 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -238,14 +455,14 @@ extern "C"
     Datum
     condaversion_le(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_le");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) <= 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) <= 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -258,14 +475,14 @@ extern "C"
     Datum
     condaversion_gt(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_gt");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) > 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) > 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
@@ -278,14 +495,14 @@ extern "C"
     Datum
     condaversion_ge(PG_FUNCTION_ARGS)
     {
-        // elog(NOTICE, "Inside condaversion_ge");
-        // mamba::specs::Version *left = (mamba::specs::Version *) PG_GETARG_POINTER(0);
-        // mamba::specs::Version *right = (mamba::specs::Version *) PG_GETARG_POINTER(1);
-        CondaVersion *left = (CondaVersion *) PG_GETARG_POINTER(0);
-        CondaVersion *right = (CondaVersion *) PG_GETARG_POINTER(1);
+        Jsonb *left_json = PG_GETARG_JSONB_P(0);
+        Jsonb *right_json = PG_GETARG_JSONB_P(1);
         int32 result;
 
-        result = condaversioncmp(left->data, right->data) >= 0;
+        mamba::specs::Version left = jsonb_to_cpp_version(left_json);
+        mamba::specs::Version right = jsonb_to_cpp_version(right_json);
+
+        result = condaversioncmp(&left, &right) >= 0;
 
         // PG_FREE_IF_COPY(left, 0);
         // PG_FREE_IF_COPY(right, 1);
