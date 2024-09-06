@@ -5,4 +5,4 @@ conda_pgsql_ext/deps
 logfile
 *.diffs
 regression.out
-
+.venv
