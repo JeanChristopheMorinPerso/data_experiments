@@ -40,3 +40,7 @@ Debug information:
 * https://wiki.postgresql.org/wiki/Getting_a_stack_trace_of_a_running_PostgreSQL_backend_on_Linux/BSD
 * https://wiki.postgresql.org/wiki/Developer_FAQ#gdb
 * https://big-elephants.com/2015-10/writing-postgres-extensions-part-iii/
+
+Other:
+* https://github.com/dvarrazzo/jsonb_parser/blob/78128f3094e976a55adb04c9fe287b7ac2045e60/pg_ubjson/ubjson.c
+
