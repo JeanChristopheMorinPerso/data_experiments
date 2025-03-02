@@ -1,0 +1,8 @@
+[package]
+name = "conda_ranges"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rattler_conda_types = "0.31.2"
+version-ranges = "0.1.1"
