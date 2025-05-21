@@ -11,8 +11,7 @@ name = "pgrx_embed_conda_pgsql_rust_ext"
 path = "./src/bin/pgrx_embed.rs"
 
 [features]
-default = ["pg16"]
-pg12 = ["pgrx/pg12", "pgrx-tests/pg12" ]
+default = ["pg17"]
 pg13 = ["pgrx/pg13", "pgrx-tests/pg13" ]
 pg14 = ["pgrx/pg14", "pgrx-tests/pg14" ]
 pg15 = ["pgrx/pg15", "pgrx-tests/pg15" ]
@@ -22,13 +21,13 @@ pg_test = ["dep:pretty_assertions"]
 no-schema-generation = ["pgrx/no-schema-generation", "pgrx-tests/no-schema-generation"]
 
 [dependencies]
-pgrx = "=0.12.1"
+pgrx = "0.14.3"
 pretty_assertions = { version = "1.4.0", optional = true }
-rattler_conda_types = "0.27.2"
-serde = "1.0.209"
+rattler_conda_types = "0.34.0"
+serde = "1.0.219"
 
 [dev-dependencies]
-pgrx-tests = "=0.12.1"
+pgrx-tests = "0.14.3"
 
 [profile.dev]
 panic = "unwind"

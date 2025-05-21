@@ -14,13 +14,14 @@ pub struct CondaVersion {
 impl std::hash::Hash for CondaVersion {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.version.hash(state);
-        self.source.hash(state);
     }
 }
 
 impl PartialEq for CondaVersion {
     fn eq(&self, other: &Self) -> bool {
-        self.version.eq(&other.version) && self.as_str().eq(&other.as_str())
+        // We initially tried to also compare the source, but this caused
+        // the hash to not work correctly.
+        self.version.eq(&other.version) //&& self.as_str().eq(&other.as_str())
     }
 }
 
@@ -28,7 +29,7 @@ impl Eq for CondaVersion {}
 
 impl PartialOrd for CondaVersion {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
+        Some(self.version.cmp(&other.version))
     }
 }
 
@@ -133,6 +134,63 @@ impl InOutFuncs for CondaVersion {
     fn output(&self, buffer: &mut pgrx::StringInfo) {
         buffer.push_str(self.source.as_deref().unwrap());
     }
+}
+
+// https://github.com/theory/pg-semver/blob/main/sql/semver.sql#L246-L255
+#[pg_extern]
+fn conda_smaller(a: CondaVersion, b: CondaVersion) -> CondaVersion {
+    if a <= b {
+        return a;
+    }
+    return b
+}
+
+#[pg_extern]
+fn conda_larger(a: CondaVersion, b: CondaVersion) -> CondaVersion {
+    if a >= b {
+        return a;
+    }
+    return b
+}
+
+extension_sql!(r#"
+CREATE OR REPLACE AGGREGATE min(CondaVersion) (
+    SFUNC = conda_smaller,
+    STYPE = CondaVersion,
+    SORTOP = <
+);
+"#,
+    name="min_aggregate",
+    requires=[CondaVersion, conda_smaller],
+    // Insert at the end because we need the operator to be already defined.
+    finalize,
+);
+
+extension_sql!(r#"
+CREATE OR REPLACE AGGREGATE max(CondaVersion) (
+    SFUNC = conda_larger,
+    STYPE = CondaVersion,
+    SORTOP = >
+);
+"#,
+    name="max_aggregate",
+    // Insert at the end because we need the operator to be already defined.
+    // Note how we insert after min_aggregate. That's because we can't have two "finalize".
+    requires=[CondaVersion, conda_larger, "min_aggregate"],
+);
+
+#[pg_extern]
+fn conda_pkgname_from_spec(specstr: &std::ffi::CStr) -> Result<String, Box<dyn std::error::Error>> {
+    let spec = rattler_conda_types::MatchSpec::from_str(
+        specstr.to_str()?,
+        rattler_conda_types::ParseStrictness::Strict,
+    )?;
+
+    if let Some(name) = spec.name {
+        print!("asd");
+        return Ok(String::from(name.as_source()));
+    }
+    return Err(Box::new(rattler_conda_types::ParseMatchSpecError::MissingPackageName));
 }
 
 #[cfg(test)]
