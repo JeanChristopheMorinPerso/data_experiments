@@ -1,5 +1,6 @@
 conda_pgsql_ext/results
 conda_pgsql_ext/deps
+conda_ranges/target
 *.o
 *.so
 logfile

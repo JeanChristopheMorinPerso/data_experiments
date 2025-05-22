@@ -4,3 +4,4 @@
 *.iml
 **/*.rs.bk
 Cargo.lock
+tests/pg_regress/results
