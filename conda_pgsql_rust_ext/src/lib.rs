@@ -123,8 +123,14 @@ impl std::fmt::Display for CondaVersion {
 
 impl InOutFuncs for CondaVersion {
     fn input(input: &core::ffi::CStr) -> Self {
-        let s = input.to_str().unwrap();
-        let version = rattler_conda_types::Version::from_str(s).unwrap();
+        let s = input.to_str().unwrap_or_else(|err| {
+            panic!("failed to Cstr to str. Error: {}", err)
+        });
+
+        let version = rattler_conda_types::Version::from_str(s).unwrap_or_else(|err| {
+            panic!("failed to parse version {:?}. It is probably not a valid conda version. Error: {}", s, err)
+        });
+
         return Self {
             version,
             source: Some(s.to_owned().into_boxed_str()),
